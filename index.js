@@ -29,9 +29,10 @@ async function run() {
 
         const productCollection = client.db('vogueVerseDB').collection('products');
 
-        app.get('/products', async (req, res) => {
-            const cursor = productCollection.find();
-            const result = await cursor.toArray();
+        app.get('/products/:brandName', async (req, res) => {
+            const brandName = req.params.brandName || '';
+            const query = {brandName: brandName};
+            const result = await productCollection.find(query).toArray();
             res.send(result);
         })
 
