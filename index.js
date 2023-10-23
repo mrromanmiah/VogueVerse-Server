@@ -28,6 +28,8 @@ async function run() {
         await client.connect();
 
         const productCollection = client.db('vogueVerseDB').collection('products');
+        const cartCollection = client.db('vogueVerseDB').collection('cart');
+
 
         app.get('/products/:brandName', async (req, res) => {
             const brandName = req.params.brandName || '';
@@ -35,7 +37,7 @@ async function run() {
             const result = await productCollection.find(query).toArray();
             res.send(result);
         })
-        
+
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id || '';
             const query = {_id: new ObjectId(id)};
@@ -74,6 +76,20 @@ async function run() {
                 }
             }
             const result = await productCollection.updateOne(filter, updateProduct, options);
+            res.send(result);
+        })
+
+        app.post('/cart', async (req, res) => {
+            const cart = req.body;
+            console.log(cart);
+            const result = await cartCollection.insertOne(cart);
+            res.send(result);
+        }) 
+
+        app.get('/cart/:userEmail', async (req, res) => {
+            const userEmail = req.params.userEmail || '';
+            const query = {userEmail: userEmail};
+            const result = await cartCollection.find(query).toArray();
             res.send(result);
         })
 
