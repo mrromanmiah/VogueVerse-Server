@@ -54,7 +54,6 @@ async function run() {
 
         app.post('/products', async (req, res) => {
             const newProduct = req.body;
-            console.log(newProduct);
             const result = await productCollection.insertOne(newProduct);
             res.send(result);
         })
@@ -81,16 +80,22 @@ async function run() {
 
         app.post('/cart', async (req, res) => {
             const cart = req.body;
-            console.log(cart);
             const result = await cartCollection.insertOne(cart);
             res.send(result);
         }) 
 
-        app.get('/cart/:userEmail', async (req, res) => {
-            const userEmail = req.params.userEmail || '';
-            const query = {userEmail: userEmail};
+        app.get('/cart/:email', async (req, res) => {
+            const email = req.params.email || '';
+            const query = {userEmail: email};
             const result = await cartCollection.find(query).toArray();
             res.send(result);
+        })
+
+        app.delete('/cart/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)};
+            const result = await cartCollection.deleteOne(query);
+            res.send(result); 
         })
 
 
